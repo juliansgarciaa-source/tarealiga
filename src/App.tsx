@@ -14,7 +14,7 @@ function App() {
   return (
     <>
      <Router>
-    <nav className="c.menu">
+    <nav className="c-menu">
       <p><Link to="/Favoritos">Favoritos</Link></p>
       <p><Link to="/Equipo">Equipo</Link></p>
       <p><Link to="/Home">home</Link></p>
@@ -24,7 +24,7 @@ function App() {
     </nav>
     <Routes>
       <Route path="/Favoritos" element={<Favoritos/>}  />
-      <Route path="/Equipo" element={<Equipo/>}  />
+      <Route path="/Equipo/:equipo" element={<Equipo/>}  />
       <Route path="/Home" element={<Home/>}  />
       <Route path="/Informativa" element={<Informativa/>}  />
       <Route path="/Original" element={<Original/>}  />
