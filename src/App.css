@@ -865,3 +865,18 @@ html, body {
   font-weight: 600;
   color: var(--accent);
 }
+.usuario-foto {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 32px var(--accent-glow);
+  margin-bottom: 16px;
+}
+
+.usuario-nombre span {
+  color: var(--accent);
+  
+}

@@ -85,7 +85,7 @@ function Original() {
         {girando ? (
           <><span className="spin-icon">⟳</span> Girando...</>
         ) : (
-          <>🎲 ¡Girar Ruleta!</>
+          <> ¡Girar Ruleta!</>
         )}
       </button>
 

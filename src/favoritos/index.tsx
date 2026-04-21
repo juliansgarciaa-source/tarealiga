@@ -55,7 +55,7 @@ function Favoritos({ favoritos, setFavoritos }: Props) {
                   onClick={() => quitarFavorito(item.id)}
                   title="Quitar de favoritos"
                 >
-                  ♥
+                  
                 </button>
               </div>
               <div className="card-body">
