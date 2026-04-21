@@ -1,186 +1,97 @@
 import "./style.css"
-import { Link } from 'react-router'
 import { useState, useEffect } from 'react'
 
-
-interface Ranking {
-  rank: number
-  contestantName: string
-  points: number
-  matchesPlayed: number
+interface Producto {
+  id: number
+  title: string
+  price: number
+  description: string
+  images: string[]
+  category: {
+    name: string
+  }
 }
-interface Estadistica {
-  position: number
-  name: string
-  value: number
-  appearances: number
-  contestantName: string
-  statName: string
-}
-type FiltroTipo = 'posiciones' | 'goleador' | 'asistencias' | 'amarillas' | 'atajadas'
-
 
 function Home() {
-  const [ranking, setRanking] = useState<Ranking[]>([])
-  const [title, setTitle] = useState('')
-  const [filtro, setFiltro] = useState<FiltroTipo>('posiciones')
-  const [estadisticas, setEstadisticas] = useState<Estadistica[]>([])
-  const filtros: FiltroTipo[] = ['posiciones', 'goleador', 'asistencias', 'amarillas', 'atajadas'];
-   const [busqueda, setBusqueda] = useState('')
+
+  const [productos, setProductos] = useState<Producto[]>([])
+  const [busqueda, setBusqueda] = useState('')
+  const [filtro, setFiltro] = useState('todos')
+
+  const filtros = ['todos', 'clothes', 'electronics', 'furniture', 'shoes', 'others']
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`https://raw.githubusercontent.com/sdtibata/dataliga/refs/heads/main/${filtro}.json`)
+        const res = await fetch('https://api.escuelajs.co/api/v1/products')
         const data = await res.json()
-         if (filtro === 'posiciones') {
-          setRanking(data.standings[0].ranking)
-          setTitle(data.standings[0].competitionName)
-        } else {
-          setEstadisticas(data)
-        }
-
-        setRanking(data.standings[0].ranking)
-        setTitle(data.standings[0].competitionName)
+        setProductos(data)
       } catch (error) {
-        console.error('Error cargando datos:', error)
+        console.error('Error cargando productos:', error)
       }
     }
 
     fetchData()
-  }, [filtro])
+  }, [])
 
-  const rankingFiltrado = ranking.filter((equipo) =>
-    busqueda.length < 3
-      ? true  // muestra todos si hay menos de 3 caracteres
-      : equipo.contestantName.toLowerCase().includes(busqueda.toLowerCase())
-  )
+  const productosFiltrados = productos.filter((item) => {
+    const coincideBusqueda =
+      busqueda.length < 3 ||
+      item.title.toLowerCase().includes(busqueda.toLowerCase())
 
-  const estadisticasFiltradas = estadisticas.filter((jugador) =>
-    busqueda.length < 3
-      ? true  // muestra todos
-      : jugador.name.toLowerCase().includes(busqueda.toLowerCase()) ||
-        jugador.contestantName.toLowerCase().includes(busqueda.toLowerCase())
-  )
+    const coincideFiltro =
+      filtro === 'todos' ||
+      item.category.name.toLowerCase().includes(filtro)
+
+    return coincideBusqueda && coincideFiltro
+  })
 
   return (
     <>
+      {/* FILTROS */}
       <div className="filtros">
-        {filtros.map((onestat) => (
+        {filtros.map((f) => (
           <button
-            key={onestat}
-            onClick={() => setFiltro(onestat)}
-            className={filtro === onestat ? 'activo' : ''}
+            key={f}
+            onClick={() => setFiltro(f)}
+            className={filtro === f ? 'activo' : ''}
           >
-            {onestat}
+            {f}
           </button>
         ))}
       </div>
 
+      {/* BUSCADOR */}
       <input
         type="text"
-        placeholder="Buscar..."
+        placeholder="Buscar producto..."
         value={busqueda}
         onChange={(e) => setBusqueda(e.target.value)}
       />
 
       <div className="tabla-container">
-        <h2>{title}</h2>
-        {filtro === 'posiciones' ? (
-          <table className="tabla-posiciones">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Equipo</th>
-                <th>PJ</th>
-                <th>Pts</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rankingFiltrado.map((equipo) => (
-                <tr key={equipo.rank}
-                    className={
-                      busqueda.length >= 3 &&
-                      equipo.contestantName.toLowerCase().includes(busqueda.toLowerCase())
-                        ? 'resaltado'
-                        : ''
-                    }
-                >
-                  <td>{equipo.rank}</td>
-                  <td>
-                        <Link to={`/equipo/${equiposMap[equipo.contestantName] || "default"}`}>
-                        {equipo.contestantName}
-                      </Link>
-                  </td>
-                  <td>{equipo.matchesPlayed}</td>
-                  <td>{equipo.points}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <table className="tabla-estadisticas">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Jugador</th>
-                <th>Equipo</th>
-                <th>PJ</th>
-                <th>{filtro}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {estadisticasFiltradas.map((jugador, index) => (
-                <tr key={index}
-                    className={
-                      busqueda.length >= 3 &&
-                      (jugador.name.toLowerCase().includes(busqueda.toLowerCase()) ||
-                      jugador.contestantName.toLowerCase().includes(busqueda.toLowerCase()))
-                        ? 'resaltado'
-                        : ''
-                    }
-                >
-                  <td>{jugador.position}</td>
-                  <td>{jugador.name}</td>
-                  <td>{jugador.contestantName}</td>
-                  <td>{jugador.appearances}</td>
-                  <td>{jugador.value}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        <h2>Productos</h2>
+
+        <div className="productos-grid">
+          {productosFiltrados.map((item) => (
+            <div key={item.id} className="card">
+
+              <img src={item.images[0]} alt={item.title} />
+
+              <h3>{item.title}</h3>
+
+              <p><strong>Categoría:</strong> {item.category.name}</p>
+
+              <p><strong>Precio:</strong> ${item.price}</p>
+
+              <p className="desc">{item.description.substring(0, 80)}...</p>
+
+            </div>
+          ))}
+        </div>
       </div>
     </>
-
-
   )
 }
-
-const equiposMap: Record<string, string> = {
-  "América de Cali SA": "america de cali",
-  "CA Bucaramanga": "atletico-bucaramanga",
-  "Club Atlético Nacional SA": "atletico-nacional",
-  "Club Deportes Tolima SA": "deportes-tolima",
-  "Asociación Deportivo Cali": "deportivo-cali",
-  "Deportivo Independiente Medellín": "independiente-medellin",
-  "Club Independiente Santa Fe": "independiente-santa-fe",
-  "CD Popular Junior FC SA": "junior",
-  "Millonarios FC": "millonarios",
-  "Once Caldas SA": "once-caldas",
-  "AD Pasto" : "pasto",
-
-  "Internacional de Bogotá": "internacional-bogota",
-  "Club Llaneros SA": "llaneros",
-  "Águilas Doradas": "aguilas-doradas",
-  "Fortaleza FC": "fortaleza",
-  "Alianza FC": "alianza",
-  "Jaguares de Córdoba FC": "jaguares",
-  "Cúcuta Deportivo FC": "cucuta",
-  "Boyacá Chicó FC": "boyaca-chico",
-  "Deportivo Pereira FC": "pereira"
-};
-
-
 
 export default Home

@@ -9,33 +9,53 @@ import Original from './original'
 import Usuario from './usuario'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [favoritos, setFavoritos] = useState<any[]>([]);
 
   return (
-    <>
-     <Router>
-    <nav className="c-menu">
-      <p><Link to="/Favoritos">Favoritos</Link></p>
-      <p><Link to="/Equipo">Equipo</Link></p>
-      <p><Link to="/Home">home</Link></p>
-      <p><Link to="/Informativa">informativa</Link></p>
-      <p><Link to="/Original">original</Link></p>
-      <p><Link to="/Usuario">Usuarios</Link></p>
-    </nav>
-    <Routes>
-      <Route path="/Favoritos" element={<Favoritos/>}  />
-      <Route path="/Equipo/:equipo" element={<Equipo/>}  />
-      <Route path="/Home" element={<Home/>}  />
-      <Route path="/Informativa" element={<Informativa/>}  />
-      <Route path="/Original" element={<Original/>}  />
-      <Route path="/Usuario" element={<Usuario/>}  />
-    </Routes>
-    </Router>  
+    <Router>
 
-    
-    
-   
-    </>
+      {/* MENU */}
+      <nav className="c-menu">
+        <p><Link to="/favoritos">Favoritos</Link></p>
+        <p><Link to="/home">Home</Link></p>
+        <p><Link to="/informativa">Informativa</Link></p>
+        <p><Link to="/original">Original</Link></p>
+        <p><Link to="/usuario">Usuario</Link></p>
+      </nav>
+
+      {/* RUTAS */}
+      <Routes>
+
+        <Route 
+          path="/"  
+          element={
+            <Home favoritos={favoritos} setFavoritos={setFavoritos} />
+          }
+        />
+
+        <Route 
+          path="/home" 
+          element={
+            <Home favoritos={favoritos} setFavoritos={setFavoritos} />
+          } 
+        />
+
+        <Route 
+          path="/favoritos" 
+          element={
+            <Favoritos favoritos={favoritos} setFavoritos={setFavoritos} />
+          }  
+        />
+
+        <Route path="/equipo/:equipo" element={<Equipo/>} />
+        <Route path="/informativa" element={<Informativa/>} />
+        <Route path="/original" element={<Original/>} />
+        <Route path="/usuario" element={<Usuario/>} />
+
+      </Routes>
+
+    </Router>
   )
 }
 
