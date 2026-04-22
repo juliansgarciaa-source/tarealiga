@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">tarealiga</string>
+    <string name="title_activity_main">tarealiga</string>
+    <string name="package_name">com.julian.tarealiga</string>
+    <string name="custom_url_scheme">com.julian.tarealiga</string>
+</resources>

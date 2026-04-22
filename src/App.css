@@ -809,6 +809,7 @@ html, body {
 .usuario-nombre {
   font-family: var(--font-display);
   font-size: 26px;
+  color: #9090aa;
   font-weight: 800;
 }
 
@@ -866,8 +867,8 @@ html, body {
   color: var(--accent);
 }
 .usuario-foto {
-  width: 160px;
-  height: 160px;
+  width: 460px;
+  height: 460px;
   border-radius: 50%;
   object-fit: cover;
   object-position: center top;
@@ -877,6 +878,6 @@ html, body {
 }
 
 .usuario-nombre span {
-  color: var(--accent);
+  color:  #e8e8f0;
   
 }
